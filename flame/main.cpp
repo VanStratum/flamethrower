@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
             cmdline.push_back(' ');
         }
     }
-    auto metrics_mgr = std::make_shared<MetricsMgr>(loop, config, cmdline);
+    auto metrics_mgr = std::make_shared<MetricsMgr>(loop, config, cmdline, want_r_limit);
 
     std::queue<std::pair<uint64_t, uint64_t>> qps_flow;
     std::vector<std::shared_ptr<TokenBucket>> rl_list;

@@ -16,7 +16,7 @@ extern ldns_lookup_table ldns_rcodes[];
 
 std::shared_ptr<Metrics> MetricsMgr::create_trafgen_metrics()
 {
-    auto m = std::make_shared<Metrics>(_loop);
+    auto m = std::make_shared<Metrics>(_loop, printed, _qpslimit);
     _metrics.push_back(m);
     return m;
 }
@@ -362,6 +362,10 @@ void Metrics::receive(const std::chrono::high_resolution_clock::time_point &rcv_
     auto now = std::chrono::high_resolution_clock::now();
     auto q_latency = now - rcv_time;
     double q_latency_ms = q_latency.count() * Metrics::HR_TO_MSEC_MULT;
+    if (*_printed > 10*_qpslimit && *_printed <= 15*_qpslimit) {
+        std::cout << q_latency_ms << std::endl;
+    }
+    (*_printed)++;
     _in_flight = in_f;
     _response_codes[rcode]++;
     _total_r_count++;

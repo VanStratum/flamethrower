@@ -232,6 +232,7 @@ void TrafGen::start_tcp_session()
 
     // OUTGOING: write operation has finished
     _tcp_handle->on<uvw::WriteEvent>([this](uvw::WriteEvent &event, uvw::TcpHandle &h) {
+        printf("in_flight: %d\n", _in_flight.size());
         if (!_finish_session_timer)
             start_wait_timer_for_session_finish();
     });

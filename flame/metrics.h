@@ -21,6 +21,8 @@ class MetricsMgr
     std::shared_ptr<uvw::Loop> _loop;
     std::shared_ptr<Config> _config;
 
+    std::shared_ptr<int> printed;
+
     // aggregation and output
     std::shared_ptr<uvw::TimerHandle> _metric_period_timer;
 
@@ -34,6 +36,8 @@ class MetricsMgr
 
     // command line XXX move to config
     std::string _cmdline;
+
+    int _qpslimit;
 
     // unique run id
     std::string _run_id;
@@ -97,11 +101,13 @@ class MetricsMgr
     void aggregate_trafgen(const Metrics *m);
 
 public:
-    MetricsMgr(std::shared_ptr<uvw::Loop> l, std::shared_ptr<Config> c, const std::string &cmdline)
+    MetricsMgr(std::shared_ptr<uvw::Loop> l, std::shared_ptr<Config> c, const std::string &cmdline, int qpslimit)
         : _loop(l)
         , _config(c)
         , _cmdline(cmdline)
+        , _qpslimit(qpslimit)
     {
+        printed = std::make_shared<int>(0);
     }
 
     void start();
@@ -118,6 +124,9 @@ class Metrics
     friend class MetricsMgr;
 
     std::shared_ptr<uvw::Loop> _loop;
+
+    std::shared_ptr<int> _printed;
+    int _qpslimit;
 
     std::string _trafgen_id;
 
@@ -146,8 +155,10 @@ public:
     constexpr static const double HR_TO_SEC_MULT = 0.000000001;
     constexpr static const double HR_TO_MSEC_MULT = 0.000001;
 
-    Metrics(std::shared_ptr<uvw::Loop> l)
+    Metrics(std::shared_ptr<uvw::Loop> l, std::shared_ptr<int> count, int qpslimit)
         : _loop(l)
+        , _printed(count)
+        , _qpslimit(qpslimit)
     {
     }
 
