@@ -91,9 +91,8 @@ class TrafGen
     std::shared_ptr<QUICSession> _quic_session;
     quicly_cid_plaintext_t q_next_cid = {0, 0, 0, 0};
 #endif
-
+    bool _started_sending;
     bool _stopping;
-
 
     void handle_timeouts(bool force_reset = false);
 
@@ -102,6 +101,7 @@ class TrafGen
     void start_udp();
     void udp_send();
 
+    void connect_tcp_events();
     void start_tcp_session();
     void start_wait_timer_for_session_finish();
 

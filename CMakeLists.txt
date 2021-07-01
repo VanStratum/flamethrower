@@ -15,7 +15,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 # ::-------------------------------------------------------------------------::
 
-project(flamethrower VERSION 0.11.0)
+project(flamethrower VERSION 0.12.0)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -41,7 +41,9 @@ add_compile_options(-Wall)
 # Find and setup all dependencies BEFORE declaring targets.
 # ::-------------------------------------------------------------------------:: 
 
-find_package(PkgConfig REQUIRED)
+find_package(Threads REQUIRED)
+
+find_package(PkgConfig)
 
 include(sanitizer)
 
@@ -95,6 +97,7 @@ set(flamecore_dirs
     PUBLIC "${CMAKE_SOURCE_DIR}/3rd/json"
     PUBLIC "${CMAKE_SOURCE_DIR}/3rd/url-parser"
     PUBLIC "${CMAKE_SOURCE_DIR}/3rd/uvw"
+    PUBLIC "${CMAKE_SOURCE_DIR}/3rd/cpp-httplib"
     )
 
 set(flamecore_libs
@@ -175,6 +178,7 @@ target_link_libraries(flame
         PRIVATE flamecore
         PRIVATE ${LIBUV_LDFLAGS}
         PRIVATE ${LIBUV_LIBRARIES}
+        PRIVATE Threads::Threads
         )
 
 add_executable(tests
