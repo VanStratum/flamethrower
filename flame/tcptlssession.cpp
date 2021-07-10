@@ -101,7 +101,14 @@ void TCPTLSSession::receive_data(const char data[], size_t len)
             ssize_t len = gnutls_record_recv(_gnutls_session, buf, sizeof(buf));
             if (len > 0) {
                 TCPSession::receive_data(buf, len);
+            } else if (len == 0){
+                std::cerr << "GNUTLS received EOF" << std::endl;
+                break;
+            } else if (len == GNUTLS_E_AGAIN || len == GNUTLS_E_INTERRUPTED){
+                if (!_pull_buffer.size())
+                    break;
             } else {
+                std::cerr << "GNUTLS error in receiving data: " << gnutls_strerror(len) << std::endl;
                 break;
             }
         }
